@@ -1,0 +1,6 @@
+node_modules/
+*.log
+progress*.json
+.env*
+!*.example
+.verification/

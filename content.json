@@ -1,0 +1,768 @@
+{
+  "modules": [
+    {
+      "id": "fundamentos-medidas",
+      "title": "1. Comunicação, protocolos e medidas",
+      "subtitle": "Comece pelo significado das regras e pelas unidades antes de calcular.",
+      "evidence": "rc0_01.pdf — Problema da Comunicação: regras das tochas, definição de protocolo e redes; rc1_01.pdf — desempenho, vazão e tempo de resposta; lista 01 - 2026-3.pdf — questões 1a e 1c. Cálculos e duplex: desenvolvimento didático autoral, não seção específica confirmada nos slides.",
+      "status": "Material lido",
+      "blocks": [
+        {
+          "title": "Comunicar exige mais que um meio físico",
+          "html": "<p>Uma rede reúne elementos computacionais que trocam dados por uma infraestrutura de comunicação. O meio pode transportar sinais, mas isso não basta: as entidades precisam concordar sobre o significado das mensagens, a ordem das ações e a reação a situações inesperadas. É esse conjunto de regras que constitui um protocolo. No exemplo histórico das tochas, há uma codificação previamente combinada, um sinal de início e uma confirmação de prontidão. A lição não é decorar a história, mas reconhecer sintaxe, significado e coordenação.</p><p>Pense em dois programas que trocam os textos CONSULTA e RESPOSTA. Se ambos aguardarem a primeira mensagem, nenhum progride. Se um interpretar o comprimento em bytes e outro em bits, o conteúdo será interpretado incorretamente. Um protocolo precisa definir quem inicia, como separar mensagens e o que fazer quando uma resposta não chega. O fato de haver conexão física não resolve esses problemas de aplicação.</p>"
+        },
+        {
+          "title": "Exemplo resolvido: tamanho não é taxa",
+          "html": "<p>Para calcular um tempo ideal de transmissão, use t = L/R, com o tamanho L em bits e a taxa R em bits por segundo. No enunciado “arquivo de 300G a 100 Mbps”, a letra G sozinha é insuficiente. Assumindo explicitamente 300 GB decimais, L = 300 × 10⁹ × 8 bits. Então t = 24.000 segundos, equivalentes a 400 minutos ou 6 horas e 40 minutos. Se fossem 300 Gb, o resultado seria 3.000 segundos, ou 50 minutos. Não escolha uma interpretação silenciosamente.</p><p>Esse cálculo despreza cabeçalhos, retransmissões, filas e limitações dos equipamentos. Taxa nominal do enlace não é necessariamente vazão útil da aplicação. Atraso de transmissão é o tempo de colocar os bits no enlace; propagação é o tempo para o sinal percorrer a distância. Um enlace mais rápido reduz o primeiro, mas não elimina o segundo.</p>"
+        },
+        {
+          "title": "Duplex e pegadinhas de prova",
+          "html": "<p>Como complemento conceitual à foto da TVC1 descrita na conversa, simplex permite comunicação em apenas um sentido; half-duplex permite os dois sentidos, mas em momentos alternados; full-duplex permite comunicação simultânea nos dois sentidos. Um rádio de apertar para falar ilustra half-duplex. Não confunda número de sentidos com orientação à conexão: são classificações diferentes.</p><p>Ao resolver uma questão, escreva a hipótese de unidade, converta o tamanho e só depois divida pela taxa. Maiúsculas importam: B representa byte e b representa bit. Uma resposta numérica sem unidade não explica o que foi encontrado. Em redes também não se deve confundir alcance, topologia e desempenho: LAN descreve escala local, enquanto vazão e atraso descrevem propriedades do serviço observado. Um meio compartilhado ainda exige regras de acesso para que transmissões concorrentes não sejam simplesmente presumidas independentes.</p>"
+        }
+      ],
+      "questions": [
+        {
+          "id": "m1-q1",
+          "type": "choice",
+          "prompt": "Assumindo 300 GB decimais e um enlace ideal de 100 Mbps, qual é o tempo de transmissão?",
+          "options": [
+            "3.000 s",
+            "24.000 s",
+            "300 s",
+            "24 s"
+          ],
+          "answerIndex": 1,
+          "answer": "São 300 × 10⁹ bytes, ou 2,4 × 10¹² bits. Dividindo por 10⁸ bits/s, obtêm-se 24.000 s. O valor 3.000 s trataria o arquivo como 300 Gb, sem converter bytes em bits.",
+          "source": "Autoral baseada em lista 01, questão 1a, e análise da TVC1 relatada"
+        },
+        {
+          "id": "m1-q2",
+          "type": "open",
+          "prompt": "Um enlace ficou dez vezes mais rápido, mas a distância não mudou. Quais componentes do atraso devem ser diferenciados antes de dizer que a comunicação ficará dez vezes mais rápida?",
+          "answer": "A transmissão L/R diminui para um décimo se L for constante. A propagação depende da distância e da velocidade do sinal, não diretamente da taxa de bits. Processamento, filas e sobrecargas também afetam o tempo observado. Portanto não há garantia de redução de dez vezes no atraso total.",
+          "criteria": [
+            "Diferenciar transmissão de propagação.",
+            "Relacionar L/R à taxa do enlace.",
+            "Evitar concluir que o atraso total necessariamente cai dez vezes."
+          ],
+          "source": "Autoral baseada em lista 01, questão 1c, e rc1_01.pdf: desempenho"
+        },
+        {
+          "id": "m1-q3",
+          "type": "choice",
+          "prompt": "Dois usuários podem falar e ouvir simultaneamente. Essa descrição classifica o canal como:",
+          "options": [
+            "Simplex, porque cada pessoa tem uma voz.",
+            "Half-duplex, porque existem dois participantes.",
+            "Full-duplex, porque os sentidos operam simultaneamente.",
+            "Orientado à conexão, independentemente dos sentidos."
+          ],
+          "answerIndex": 2,
+          "answer": "Full-duplex descreve simultaneidade nos dois sentidos. Half-duplex exige alternância. Orientação à conexão trata de estabelecimento lógico e não substitui a classificação duplex.",
+          "source": "Autoral baseada em fundamentos de comunicação e foto da TVC1 descrita na conversa"
+        }
+      ]
+    },
+    {
+      "id": "camadas-encapsulamento",
+      "title": "2. Camadas, serviços e encapsulamento",
+      "subtitle": "Diferencie o que uma camada oferece de como entidades-pares se entendem.",
+      "evidence": "rc1_02.pdf — entidades-pares, comunicação horizontal/vertical, SAPs, OSI camada por camada e comparação OSI/TCP-IP; rc0_01.pdf — vantagens e custos da organização em camadas.",
+      "status": "Material lido",
+      "blocks": [
+        {
+          "title": "Serviço, interface e protocolo",
+          "html": "<p>Uma camada oferece serviços à camada imediatamente superior e utiliza serviços da inferior. Serviço descreve o que é oferecido, por exemplo transportar dados entre processos. Interface descreve como solicitar isso, incluindo operações, parâmetros e resultados. Protocolo descreve as regras entre entidades-pares em máquinas diferentes. Esses três conceitos se relacionam, mas não são sinônimos. Uma operação de socket é parte da interface de programação; não é, por si só, uma mensagem TCP enviada pela rede.</p><p>A comunicação horizontal entre pares é uma abstração lógica: duas entidades de transporte obedecem ao mesmo protocolo. Na implementação, os dados descem pela pilha da origem, atravessam o meio físico e sobem pela pilha do destino. A camada superior não precisa conhecer todos os detalhes elétricos do enlace. Essa separação facilita testes, implementação independente e interligação de sistemas diferentes.</p>"
+        },
+        {
+          "title": "Mapa das responsabilidades",
+          "html": "<p>No modelo didático de cinco camadas, aplicação trata de mensagens de serviços como Web e DNS; transporte permite comunicação entre processos; rede trata do encaminhamento de pacotes entre redes; enlace organiza a comunicação no enlace local; física transmite sinais que representam bits. O modelo OSI distingue sete camadas, incluindo sessão e apresentação. Os slides também apresentam TCP/IP com quatro camadas e uma adaptação de cinco. Ao responder, indique qual modelo está usando, em vez de misturar contagens.</p><p>O encapsulamento acrescenta informações de controle conforme os dados descem. Uma mensagem de aplicação pode ser transportada em um segmento TCP, dentro de um pacote IP, dentro de um quadro de enlace. No destino, cada camada interpreta as informações correspondentes e entrega o conteúdo à superior. Esses nomes ajudam a localizar funções; não significam que todo protocolo ou toda transmissão tenha exatamente o mesmo formato.</p>"
+        },
+        {
+          "title": "Exemplo resolvido e limites das simplificações",
+          "html": "<p>Imagine um navegador que pede uma página a um servidor em outra rede. A aplicação constrói uma requisição; o transporte fornece o serviço escolhido; IP permite seguir até a rede de destino; o enlace leva o pacote até o próximo salto acessível. Um roteador recebe um quadro, trata o pacote IP e o envia por outro enlace. O quadro não precisa permanecer idêntico de ponta a ponta, pois os enlaces podem usar tecnologias diferentes.</p><p>A pegadinha é atribuir toda confiabilidade à camada de enlace ou todo endereçamento à camada de rede. O transporte também possui identificadores de processos e mecanismos próprios. Os slides descrevem objetivos de controle de erro no enlace, mas isso não implica que todo enlace ofereça entrega perfeita ou confirmação. Dividir em camadas também tem custos: cabeçalhos, processamento e possível repetição de funções. A organização é uma ferramenta para compreender responsabilidades, não uma promessa de ausência de falhas nem uma reprodução exata de qualquer implementação real.</p>"
+        }
+      ],
+      "questions": [
+        {
+          "id": "m2-q1",
+          "type": "choice",
+          "prompt": "Uma biblioteca permite send(socket, dados). A assinatura da operação e seus parâmetros exemplificam principalmente:",
+          "options": [
+            "A interface de acesso a um serviço.",
+            "O protocolo de roteamento entre roteadores.",
+            "A codificação elétrica dos bits.",
+            "Uma garantia de entrega da mensagem."
+          ],
+          "answerIndex": 0,
+          "answer": "A operação disponibilizada ao programa faz parte da interface. A definição de como pares interpretam mensagens pertence ao protocolo; o fato de chamar send não prova entrega ao destino.",
+          "source": "Autoral baseada em rc1_02.pdf: serviços, interfaces e protocolos"
+        },
+        {
+          "id": "m2-q2",
+          "type": "open",
+          "prompt": "Explique por que duas camadas de transporte podem ser chamadas de pares se os bits só atravessam fisicamente o enlace inferior.",
+          "answer": "São pares lógicos porque implementam o mesmo nível e obedecem ao protocolo de transporte. Na origem, os dados descem por rede, enlace e física; no destino, sobem até o transporte. A comunicação horizontal é uma abstração construída sobre os serviços inferiores.",
+          "criteria": [
+            "Identificar pares na mesma camada em máquinas diferentes.",
+            "Explicar a passagem vertical pela pilha.",
+            "Distinguir interação lógica de percurso físico."
+          ],
+          "source": "Autoral baseada em rc1_02.pdf: comunicação horizontal e vertical"
+        },
+        {
+          "id": "m2-q3",
+          "type": "choice",
+          "prompt": "Ao atravessar um roteador e mudar de tecnologia de enlace, qual descrição é mais adequada?",
+          "options": [
+            "O quadro precisa ser idêntico em todos os saltos.",
+            "O roteador só lê a mensagem humana da aplicação.",
+            "O pacote IP pode ser encaminhado dentro de um novo quadro apropriado ao próximo enlace.",
+            "O endereço de porta passa a substituir o endereço IP."
+          ],
+          "answerIndex": 2,
+          "answer": "O enlace é local ao salto. O roteador encaminha o pacote segundo a camada de rede e usa o enlace da saída, que pode exigir outro quadro. Portas não substituem os endereços IP.",
+          "source": "Autoral baseada em rc1_02.pdf: rede, enlace e IP sobre diferentes protocolos"
+        }
+      ]
+    },
+    {
+      "id": "confiabilidade-protocolos",
+      "title": "3. Confirmações, perdas e temporizadores",
+      "subtitle": "Reconstrua o raciocínio dos slides: cada solução introduz novas condições.",
+      "evidence": "rc0_02.pdf — Conexão, Confirmação, Projeto de protocolos confirmados, Temporizadores e retransmissão, identificadores e marca de tempo.",
+      "status": "Material lido",
+      "blocks": [
+        {
+          "title": "Conexão não é confirmação",
+          "html": "<p>Um protocolo orientado à conexão estabelece uma relação lógica antes de transferir dados e depois termina essa relação. Um protocolo sem conexão não exige essa fase prévia. Confirmação responde a outra pergunta: o receptor envia uma mensagem indicando recebimento correto, ou eventualmente um problema? Um ACK é uma confirmação positiva; um NAK é uma indicação negativa. Nos slides, TCP é o exemplo de protocolo orientado à conexão e confirmado, enquanto UDP e IP ilustram serviços sem conexão e sem confirmação própria de entrega.</p><p>Não conclua que estabelecer uma conexão garante que qualquer dado futuro chegará. Conexão trata de organização da interação; confiabilidade depende de mecanismos e hipóteses adicionais. Também é possível que uma aplicação sobre UDP troque suas próprias confirmações. Nesse caso a confirmação pertence ao protocolo da aplicação, não se transforma automaticamente em uma característica do UDP.</p>"
+        },
+        {
+          "title": "Exemplo resolvido: o dado chegou, mas o ACK se perdeu",
+          "html": "<p>A envia uma mensagem para B. B a recebe e responde com ACK, mas esse ACK se perde. A não consegue distinguir imediatamente entre perda da mensagem e perda da confirmação. Sem limite de espera, pode ficar bloqueado indefinidamente. Um temporizador determina quando agir diante da ausência do evento esperado. Ao expirar, A pode retransmitir, respeitando uma política de tentativas e uma condição de desistência.</p><p>Agora B recebe novamente o mesmo conteúdo. Se a mensagem representasse “efetuar pagamento”, executar de novo seria perigoso. Um identificador permite reconhecer uma duplicata e repetir a confirmação sem repetir a operação. O ACK precisa indicar a qual mensagem corresponde, evitando que uma confirmação atrasada seja interpretada como confirmação de um dado posterior. Portanto temporizador e retransmissão não resolvem sozinhos a identificação daquilo que já foi recebido.</p>"
+        },
+        {
+          "title": "O que o silêncio realmente informa",
+          "html": "<p>Um timeout indica que a confirmação não foi observada dentro do limite adotado. Não prova que o destinatário esteja desligado nem que o dado não tenha chegado. Um limite muito curto pode provocar retransmissões desnecessárias; um limite muito longo aumenta a demora para reagir. Os slides ainda discutem identificadores finitos: quando valores são reutilizados, mensagens antigas podem causar confusão. Validade temporal e regras de reutilização ajudam a controlar esse risco no projeto apresentado.</p><p>A situação do e-mail na TVC1 exige cuidado. Se um programa espera uma resposta do protocolo, um temporizador pode evitar espera indefinida. Se uma pessoa recebeu a mensagem e não respondeu, SMTP não obriga uma resposta humana. São níveis distintos. Para uma resposta discursiva, descreva o evento esperado, a falha possível e a ação após a espera. Não use “o protocolo garante tudo” como explicação. Em um sistema distribuído, cada participante observa apenas parte do que aconteceu; ter enviado um dado não equivale a saber que o outro lado o processou.</p>"
+        }
+      ],
+      "questions": [
+        {
+          "id": "m3-q1",
+          "type": "choice",
+          "prompt": "B recebeu uma mensagem, mas seu ACK se perdeu. A retransmite após o timeout. O que evita executar a mesma operação duas vezes?",
+          "options": [
+            "Apenas aumentar a taxa do enlace.",
+            "Reconhecer identificadores e tratar a retransmissão como duplicata.",
+            "Eliminar todas as confirmações.",
+            "Interpretar qualquer ACK como confirmação da última mensagem."
+          ],
+          "answerIndex": 1,
+          "answer": "O identificador permite reconhecer que aquele dado já foi recebido. B pode confirmar novamente sem repetir a operação. Aumentar a taxa não resolve a ambiguidade e aceitar qualquer ACK permite confundir mensagens diferentes.",
+          "source": "Autoral baseada em rc0_02.pdf: cenários de perda e identificadores"
+        },
+        {
+          "id": "m3-q2",
+          "type": "open",
+          "prompt": "Um timeout expirou. Você pode afirmar que o receptor não recebeu a mensagem? Justifique e proponha uma ação.",
+          "answer": "Não. A mensagem pode ter sido perdida, mas também pode ter chegado e apenas o ACK ter sido perdido ou atrasado. Uma política possível retransmite a mensagem identificada, reinicia a espera e limita tentativas. O receptor deve tratar duplicatas e a aplicação deve decidir como lidar com eventual resultado incerto.",
+          "criteria": [
+            "Não tratar timeout como prova de não recebimento.",
+            "Apresentar pelo menos dois cenários compatíveis.",
+            "Propor reação com retransmissão identificada ou encerramento controlado."
+          ],
+          "source": "Autoral baseada em rc0_02.pdf: temporizadores e retransmissão"
+        },
+        {
+          "id": "m3-q3",
+          "type": "choice",
+          "prompt": "Uma aplicação sobre UDP envia confirmações próprias. Qual conclusão é correta?",
+          "options": [
+            "UDP passou a estabelecer conexão TCP.",
+            "A aplicação pode adicionar controle, embora UDP não forneça confirmação de entrega por si.",
+            "IP passa a garantir entrega sem perdas.",
+            "Confirmação e conexão são obrigatoriamente a mesma coisa."
+          ],
+          "answerIndex": 1,
+          "answer": "Camadas superiores podem acrescentar mecanismos. Isso não muda o serviço básico do UDP nem implica usar TCP. Confirmação e estabelecimento de conexão são conceitos separados.",
+          "source": "Autoral baseada em rc0_02.pdf: conexão versus confirmação e rc1_02.pdf: UDP"
+        }
+      ]
+    },
+    {
+      "id": "clientes-sockets",
+      "title": "4. Cliente, servidor, portas e sockets",
+      "subtitle": "Siga a comunicação entre processos, não apenas entre computadores.",
+      "evidence": "rc2_01.ppt — Paradigma cliente-servidor, Programa servidor × Computador servidor, Identificação de um serviço; lab_rc_02.pdf — O que é Socket?, definição, ServerSocket, accept e servidor de ECHO.",
+      "status": "Material lido",
+      "blocks": [
+        {
+          "title": "Papéis de programas, não categorias fixas de máquinas",
+          "html": "<p>Cliente é o processo que inicia a interação; servidor é o processo que aguarda requisições para oferecer um serviço. Uma máquina não precisa ser um equipamento especial para executar um servidor. Os slides distinguem explicitamente programa servidor e computador servidor: o papel pertence ao programa, embora máquinas dedicadas possam ter recursos adequados para atender muitos clientes. Um mesmo programa também pode atuar como servidor em uma interação e como cliente em outra.</p><p>O padrão evita a situação em que ambos esperam indefinidamente pela primeira mensagem. O cliente precisa conhecer como alcançar o serviço, incluindo endereço e porta. O endereço IP permite localizar uma interface na rede; a porta participa da identificação do ponto de comunicação do transporte. Vários serviços podem coexistir em um computador sem que todos recebam indistintamente os mesmos dados.</p>"
+        },
+        {
+          "title": "Exemplo resolvido: vários clientes na mesma porta",
+          "html": "<p>Considere o servidor de ECHO do laboratório, escutando na porta 4444. Um cliente em 192.168.1.10 usa a porta local 51000 para acessar 192.168.1.20:4444. Outro cliente usa 192.168.1.11:51000 para acessar o mesmo servidor. As conexões TCP continuam distintas porque os pares de endpoints são diferentes. No contexto TCP, a combinação IP de origem, porta de origem, IP de destino e porta de destino identifica a conexão.</p><p>O socket é uma abstração de comunicação utilizada pelo processo. O socket de escuta aguarda conexões; accept retorna um socket associado à conexão aceita. Isso não exige que o servidor mude sua porta local a cada cliente. A formulação introdutória do laboratório sobre “nova porta” não deve ser interpretada como regra geral do TCP: novo socket não significa obrigatoriamente nova porta. Distinguir esses objetos resolve uma pegadinha frequente.</p>"
+        },
+        {
+          "title": "Protocolo da aplicação e concorrência",
+          "html": "<p>Depois de conectar, os processos ainda precisam combinar o formato das mensagens. No laboratório, os comandos propostos são echo, com um parâmetro contendo a mensagem, e quit, para encerrar. Um projeto precisa dizer onde a mensagem termina, como tratar um comando inválido e quando fechar os recursos. TCP oferece um fluxo de bytes; uma leitura não precisa corresponder exatamente a uma escrita feita no outro lado. Separadores ou comprimentos definidos pela aplicação ajudam a reconstruir mensagens.</p><p>O exemplo inicial é sequencial e a tarefa pede torná-lo multithreaded. Enquanto uma conexão monopoliza o atendimento, outras podem esperar. Atender conexões concorrentemente não significa que cada implementação de servidor precise criar uma thread nova por requisição: essa é uma estratégia didática possível, não a definição universal de servidor. Para revisar, desenhe o socket de escuta separado dos sockets conectados, identifique os dois endpoints e explique o que pertence à aplicação e o que pertence ao transporte. Só dizer “socket é uma porta” deixa de fora a abstração e o estado da comunicação.</p>"
+        }
+      ],
+      "questions": [
+        {
+          "id": "m4-q1",
+          "type": "choice",
+          "prompt": "Dois clientes acessam simultaneamente o mesmo servidor TCP na porta 4444. Por que as conexões podem ser distintas?",
+          "options": [
+            "Porque o servidor é obrigado a mudar para uma porta de escuta diferente por cliente.",
+            "Porque o conteúdo da primeira mensagem é o único identificador.",
+            "Porque a combinação dos endpoints de origem e destino distingue as conexões.",
+            "Porque endereços IP são dispensáveis quando há portas."
+          ],
+          "answerIndex": 2,
+          "answer": "As conexões diferem no par de endpoints, mesmo compartilhando a porta local do servidor. accept produz um socket conectado sem exigir a troca da porta de escuta.",
+          "source": "Autoral baseada em lab_rc_02.pdf: endpoints e aceitação de conexões"
+        },
+        {
+          "id": "m4-q2",
+          "type": "open",
+          "prompt": "Descreva o percurso de uma requisição ECHO, desde a espera do servidor até a devolução da mensagem, distinguindo socket de escuta e socket conectado.",
+          "answer": "O servidor associa o socket de escuta à porta 4444 e aguarda. O cliente inicia a conexão para o endpoint conhecido. accept retorna um socket conectado para aquela comunicação; o servidor lê uma mensagem de acordo com o protocolo, produz a resposta e a envia por esse socket. O socket de escuta pode continuar disponível para outras conexões, conforme o modelo de atendimento adotado.",
+          "criteria": [
+            "Separar escuta de comunicação conectada.",
+            "Indicar que o cliente inicia.",
+            "Relacionar leitura e resposta ao protocolo ECHO.",
+            "Não exigir uma nova porta de escuta por cliente."
+          ],
+          "source": "Autoral baseada em lab_rc_02.pdf: passos do servidor de ECHO"
+        },
+        {
+          "id": "m4-q3",
+          "type": "choice",
+          "prompt": "Um processo recebe uma requisição e consulta outro serviço para respondê-la. Ele é:",
+          "options": [
+            "Apenas cliente, pois servidores nunca consultam serviços.",
+            "Servidor na primeira interação e cliente na segunda.",
+            "Um roteador, por conectar duas aplicações.",
+            "Obrigatoriamente dois computadores físicos."
+          ],
+          "answerIndex": 1,
+          "answer": "Cliente e servidor são papéis relativos a cada interação. Um processo pode oferecer um serviço e utilizar outro, como no exemplo de DNS apresentado nos slides.",
+          "source": "Autoral baseada em rc2_01.ppt: observações finais"
+        }
+      ]
+    },
+    {
+      "id": "aplicacoes-dns-email",
+      "title": "5. Aplicações, DNS e correio eletrônico",
+      "subtitle": "Entenda o serviço desejado antes de escolher o transporte.",
+      "evidence": "rc2_02.ppt — DNS, espaço de nomes, servidores de nomes e resolver; rc2_01.ppt — portos conhecidos e escolha de transporte; lista 01 - 2026-3.pdf — questão 1b; rc1_02.pdf — aplicação versus protocolo. SMTP, TCP em DNS e ressalva HTTP/3 são complementos conceituais, não detalhamento confirmado desses slides.",
+      "status": "Material lido",
+      "blocks": [
+        {
+          "title": "Aplicação, protocolo e transporte",
+          "html": "<p>Web é uma aplicação em rede; HTTP é um protocolo usado por essa aplicação. FTP trata de transferência de arquivos e SMTP de envio ou retransmissão de correio eletrônico. Esses protocolos definem mensagens e comportamentos próprios, enquanto a camada de transporte fornece o canal lógico utilizado. Associar cada sigla a uma camada ajuda, mas o principal é explicar por que um serviço é adequado à necessidade da aplicação.</p><p>A lista pergunta por que HTTP, FTP e SMTP tradicionalmente usam TCP em vez de UDP. A resposta esperada pelo modelo clássico é que o transporte confiável e ordenado evita que cada aplicação tenha de reconstruir sozinha partes importantes da entrega. Não transforme a formulação histórica em “HTTP sempre usa TCP”: como complemento atual, HTTP/3 usa QUIC sobre UDP. Isso também mostra que UDP pode servir de base para mecanismos de transporte mais completos, em vez de significar que a aplicação aceita perder tudo.</p>"
+        },
+        {
+          "title": "Exemplo resolvido: procurar o nome antes de conectar",
+          "html": "<p>Ao acessar um serviço pelo nome, a aplicação pode chamar um resolver. Se a informação não estiver disponível em cache, o processo de resolução procura dados DNS. O espaço de nomes é hierárquico, com domínios e subdomínios, e a administração é distribuída em zonas. Isso evita manter toda a Internet em um único arquivo de nomes ou em um único servidor. Domínio é uma organização do espaço de nomes; zona está relacionada à parte administrada de forma autoritativa, não é apenas outro nome para qualquer domínio.</p><p>Nos slides, o resolver envia uma consulta UDP ao servidor DNS local. Para uma consulta curta, isso evita estabelecer uma conexão TCP antes da troca. Porém DNS não é exclusivamente UDP: TCP também é utilizado, por exemplo em transferências de zona e quando necessário para respostas que não cabem adequadamente na troca UDP. Essa ressalva é complemento técnico ao esquema simplificado do slide. Resolver um nome e estabelecer a conexão com o serviço são etapas diferentes.</p>"
+        },
+        {
+          "title": "E-mail sem resposta: qual resposta está faltando?",
+          "html": "<p>Enviar uma mensagem por SMTP não obriga o destinatário a responder como pessoa. É necessário distinguir a confirmação do protocolo, a aceitação por um servidor e uma resposta humana posterior. Um temporizador pode limitar quanto um programa espera por uma resposta técnica. Ele não resolve a decisão de alguém de ignorar um e-mail. Ao analisar um cenário ambíguo de prova, explicite qual desses eventos você está considerando e só então relacione o mecanismo apropriado.</p><p>Outra pegadinha é decorar portas como se fossem uma propriedade impossível de configurar. Portas conhecidas são convenções úteis para localizar serviços, não uma prova de qual programa realmente atende ali. O material rc2_01 contém uma indicação inconsistente para POP3; ela não é reproduzida aqui como fato. O estudo prioriza o raciocínio sobre identificação de serviços, separando nomes DNS, endereços IP, portas e protocolos. Nenhum desses elementos, isoladamente, equivale à identidade de uma pessoa ou garante que ela leu uma mensagem.</p>"
+        }
+      ],
+      "questions": [
+        {
+          "id": "m5-q1",
+          "type": "choice",
+          "prompt": "Qual descrição sobre DNS é tecnicamente mais adequada?",
+          "options": [
+            "Sempre usa TCP porque toda aplicação precisa de conexão.",
+            "Tipicamente usa UDP em consultas simples, mas também utiliza TCP em situações apropriadas.",
+            "Nunca precisa trocar mensagens porque nomes já são endereços IP.",
+            "Usa SMTP para transformar nomes em números."
+          ],
+          "answerIndex": 1,
+          "answer": "O exemplo dos slides usa UDP, adequado a trocas curtas sem estabelecimento prévio de TCP. O complemento ressalva TCP, inclusive para transferências de zona e outras necessidades. DNS é um serviço de resolução, não um protocolo de correio.",
+          "source": "Autoral baseada em rc2_02.ppt: resolver, com complemento conceitual sobre DNS/TCP"
+        },
+        {
+          "id": "m5-q2",
+          "type": "open",
+          "prompt": "Uma pessoa enviou e-mail e não recebeu resposta. Explique duas interpretações diferentes e por que “usar timeout” só resolve uma parte do problema.",
+          "answer": "Se um programa aguarda uma resposta do protocolo e ela não chega, um timeout limita a espera e permite tratar a falha. Se o servidor aceitou o e-mail, mas o destinatário humano não respondeu, esse silêncio não é uma falha de resposta SMTP nem pode ser eliminado pelo transporte. É necessário dizer qual evento está ausente antes de propor um mecanismo.",
+          "criteria": [
+            "Separar resposta técnica de resposta humana.",
+            "Explicar o efeito limitado do temporizador.",
+            "Não prometer leitura ou resposta humana garantida por SMTP."
+          ],
+          "source": "Autoral baseada em rc0_02.pdf: temporizadores e análise da TVC1 descrita na conversa"
+        },
+        {
+          "id": "m5-q3",
+          "type": "choice",
+          "prompt": "Qual afirmação evita uma generalização indevida ao justificar a escolha de transporte?",
+          "options": [
+            "Todo HTTP de qualquer versão usa TCP.",
+            "TCP garante que o usuário lerá o conteúdo.",
+            "No modelo clássico, TCP oferece entrega ordenada e confiável para HTTP, FTP e SMTP; HTTP/3 é uma ressalva à associação universal HTTP–TCP.",
+            "Se usa UDP, a aplicação jamais pode implementar confiabilidade."
+          ],
+          "answerIndex": 2,
+          "answer": "A justificativa clássica é o serviço de transporte. Ela não deve apagar alternativas como HTTP/3 sobre QUIC/UDP nem confundir entrega de dados com leitura humana.",
+          "source": "Autoral baseada em lista 01: questão 1b, com ressalva conceitual HTTP/3"
+        }
+      ]
+    },
+    {
+      "id": "p2p-gerenciamento",
+      "title": "6. P2P e gerenciamento de redes",
+      "subtitle": "Compare distribuição de recursos com coordenação e observabilidade.",
+      "evidence": "rc2_03.ppt — APLICAÇÕES P2P, Centralized Topology, Napster, Gnutella, BitTorrent Swarm, rarest-first e tracker; texto recuperado de registros do PPT após falha da extração automática, sem validação das figuras. rc2_02.ppt — áreas funcionais ISO, arquitetura SNMP, gerente, agente e MIB.",
+      "status": "Material lido",
+      "blocks": [
+        {
+          "title": "P2P não significa ausência de qualquer dependência",
+          "html": "<p>Em uma arquitetura peer-to-peer, participantes podem fornecer e consumir recursos. Isso distribui parte do trabalho e pode ampliar a capacidade conforme novos participantes contribuem. Entretanto a coordenação fica mais difícil: nós entram e saem, possuem capacidades diferentes e nem sempre mantêm uma visão consistente do sistema. Não basta escrever “P2P é mais escalável”; uma resposta melhor identifica qual recurso cresce, quem contribui e qual dependência ainda existe.</p><p>Os slides mostram o Napster com índice e busca centralizados, mas transferência de arquivos diretamente entre pares. Portanto dados distribuídos não significam busca distribuída. Gnutella distribui busca e transferência, embora o ingresso inicial possa depender de pontos de contato. Ao analisar tolerância a falhas, separe descoberta de conteúdo, localização de participantes e transferência. A queda de uma entidade pode interromper apenas algumas dessas funções, não necessariamente todas as conexões já existentes.</p>"
+        },
+        {
+          "title": "Exemplo resolvido: peças em um swarm",
+          "html": "<p>No BitTorrent descrito no material, um arquivo é dividido em peças que participantes solicitam a vizinhos. Um peer que ainda não tem o arquivo inteiro já pode contribuir com peças completas. O swarm é o conjunto de participantes envolvidos naquele conteúdo; um seed possui o arquivo completo. Um tracker auxilia a encontrar participantes, não precisa transportar cada byte do arquivo. Os slides também discutem alternativas sem tracker centralizado, baseadas em uma tabela hash distribuída.</p><p>Suponha que muitos pares já tenham a peça A, mas poucos tenham a peça B. Solicitar prioritariamente B, pela estratégia rarest-first, aumenta a diversidade e reduz o risco de faltar aquela peça quando um participante sair. Isso não garante disponibilidade eterna: se ninguém possui uma peça necessária, mais vizinhos com cópias das demais não a recriam. Também não é correto atribuir o sucesso ou fracasso histórico de um sistema apenas à topologia; os slides misturam aspectos técnicos e históricos, e as perguntas autorais aqui focalizam as dependências verificáveis.</p>"
+        },
+        {
+          "title": "Gerenciar é observar e agir sobre recursos",
+          "html": "<p>O material de gerenciamento divide funções em falhas, configuração, segurança, desempenho e contabilidade. Detectar um enlace indisponível é gerenciamento de falhas; registrar uma alteração de parâmetros é configuração; medir utilização e tempo de resposta é desempenho. Essas categorias organizam o objetivo de cada atividade, embora um mesmo incidente possa exigir ações em várias delas.</p><p>Na arquitetura SNMP apresentada, o gerente solicita e analisa informações, o agente representa o recurso gerenciado e a MIB organiza os objetos acessíveis. Uma consulta de contadores pode ajudar a investigar aumento de tráfego P2P; uma trap é uma notificação iniciada pelo agente. Receber uma notificação não corrige automaticamente o problema. A MIB não é o próprio enlace nem um protocolo de roteamento: é a organização das informações de gerenciamento. Para revisar, combine os assuntos: distribuir transferência pode aliviar um servidor, mas ainda exige observar disponibilidade, taxas e dependências do sistema.</p>"
+        }
+      ],
+      "questions": [
+        {
+          "id": "m6-q1",
+          "type": "choice",
+          "prompt": "Um sistema transfere arquivos entre pares, mas usa um índice central para localizar os arquivos. Qual análise é melhor?",
+          "options": [
+            "Não pode ser P2P em nenhum componente.",
+            "A transferência é distribuída, mas a descoberta ainda depende do índice central.",
+            "O índice central transporta obrigatoriamente todos os arquivos.",
+            "Qualquer falha do índice apaga todos os arquivos dos participantes."
+          ],
+          "answerIndex": 1,
+          "answer": "Como no exemplo do Napster, é necessário separar o plano de busca do plano de transferência. A dependência central pode afetar descoberta sem significar que os dados estavam centralizados.",
+          "source": "Autoral baseada em rc2_03.ppt: Napster e topologia centralizada"
+        },
+        {
+          "id": "m6-q2",
+          "type": "open",
+          "prompt": "Por que rarest-first pode melhorar a disponibilidade das peças de um arquivo? Indique também um limite dessa estratégia.",
+          "answer": "Priorizar peças pouco replicadas aumenta sua presença entre os pares e reduz a dependência dos poucos nós que as possuem. Assim, a saída de um desses nós tem menor chance de eliminar a última cópia disponível. A estratégia não recupera uma peça inexistente no swarm nem garante que participantes continuem conectados.",
+          "criteria": [
+            "Relacionar raridade a pouca replicação.",
+            "Explicar diversidade e tolerância à saída de peers.",
+            "Reconhecer que a estratégia não cria dados ausentes."
+          ],
+          "source": "Autoral baseada em rc2_03.ppt: Choosing pieces to request / rarest-first"
+        },
+        {
+          "id": "m6-q3",
+          "type": "choice",
+          "prompt": "Um sistema consulta contadores de tráfego de um equipamento e recebe dele uma trap. Quem exerce cada papel?",
+          "options": [
+            "A MIB envia sinais elétricos, e o roteador é o protocolo.",
+            "O gerente consulta; o agente representa o equipamento e pode enviar a notificação.",
+            "O agente sempre precisa esperar uma consulta para comunicar qualquer evento.",
+            "O tracker do BitTorrent substitui obrigatoriamente o gerente SNMP."
+          ],
+          "answerIndex": 1,
+          "answer": "Gerente e agente têm papéis distintos. A MIB organiza os objetos de gerenciamento e a trap exemplifica informação não solicitada enviada pelo agente.",
+          "source": "Autoral baseada em rc2_02.ppt: arquitetura SNMP e agente de gerenciamento"
+        }
+      ]
+    },
+    {
+      "id": "transporte-tcp-udp",
+      "title": "7. Transporte: TCP, UDP, fluxo e congestionamento",
+      "subtitle": "Escolha garantias e custos conforme a necessidade da aplicação.",
+      "evidence": "rc1_02.pdf — transporte, TCP byte stream, controle de fluxo e UDP; rc0_02.pdf — ACK, temporizadores e identificadores; lista 01 - 2026-3.pdf — questão 3 sobre implementação TCP. Distinção entre janelas, ACK cumulativo e ajuste de timeout: aprofundamento autoral, sem slides específicos de transporte detalhado disponíveis.",
+      "status": "Material lido",
+      "blocks": [
+        {
+          "title": "Dois serviços diferentes sobre IP",
+          "html": "<p>TCP fornece à aplicação um fluxo de bytes ordenado e confiável, enquanto a conexão estiver funcionando. Faz o receptor reconstruir a sequência apesar de perdas ou reordenações tratáveis. Isso não significa que uma conexão sobreviva indefinidamente a qualquer falha. Se a comunicação não puder prosseguir, a aplicação precisa lidar com o erro. O transporte também não determina sozinho a estrutura das mensagens: quem envia dois comandos precisa definir como o outro lado separa esses comandos no fluxo.</p><p>UDP oferece datagramas e não implementa por si os mesmos mecanismos de conexão, entrega ordenada e retransmissão do TCP. Ele não é “sempre mais rápido” em qualquer cenário; evita certos mecanismos e permite à aplicação escolher outros. Uma aplicação interativa pode preferir descartar um dado atrasado a esperar pela retransmissão. Essa preferência depende de prazo e tolerância a perdas, não apenas de o conteúdo ser áudio ou vídeo.</p>"
+        },
+        {
+          "title": "Exemplo resolvido: ACK cumulativo",
+          "html": "<p>Como aprofundamento da questão 3 da lista, considere um receptor TCP esperando o byte 1000. Chegam os bytes de 1000 até 1499, sem lacunas anteriores. O próximo byte esperado é 1500, portanto o ACK cumulativo indica 1500. Se um trecho posterior chega, mas ainda faltam bytes anteriores, um ACK cumulativo não pode declarar que toda a sequência até esse trecho está completa. A unidade dos números de sequência do TCP é o byte, não o número ordinal de um pacote arbitrário.</p><p>A lista apresenta uma implementação para ser criticada, incluindo temporizador fixo e retransmissão apenas por expiração. Não memorize os itens como se fossem regras corretas. O tempo de espera precisa considerar as condições da comunicação; um valor fixo muito baixo pode retransmitir sem necessidade. Há também mecanismos de detecção baseados em confirmações. Detalhes variam entre mecanismos e implementações: o objetivo aqui é compreender a falha do raciocínio, não inventar um gabarito oficial para cada alternativa da lista.</p>"
+        },
+        {
+          "title": "Fluxo não é congestionamento",
+          "html": "<p>Controle de fluxo protege o receptor contra receber mais dados do que consegue acomodar. Controle de congestionamento responde à capacidade do caminho e às condições da rede. São limites diferentes: o receptor pode ter espaço livre enquanto roteadores intermediários estão congestionados; a rede pode estar livre enquanto o receptor está sem espaço. Na explicação didática, a quantidade enviada sem confirmação precisa respeitar tanto o limite anunciado pelo receptor quanto o limite de congestionamento, além do estado da conexão.</p><p>Streaming ao vivo costuma valorizar baixa latência, mas vídeo sob demanda com buffer pode ter prioridades diferentes. Para justificar uma escolha, descreva o que acontece se um dado faltar, chegar fora de ordem ou chegar depois do prazo. A pegadinha é responder só com adjetivos: “TCP seguro, UDP rápido”. Confiabilidade não equivale a criptografia, e usar UDP não elimina congestionamento. Uma aplicação responsável continua precisando considerar a capacidade da rede e os efeitos de suas próprias transmissões.</p>"
+        }
+      ],
+      "questions": [
+        {
+          "id": "m7-q1",
+          "type": "choice",
+          "prompt": "O receptor recebeu sem lacunas os bytes TCP 1000 a 1499 e aguardava o byte 1000. Qual ACK cumulativo indica o próximo esperado?",
+          "options": [
+            "1000",
+            "1499",
+            "1500",
+            "500"
+          ],
+          "answerIndex": 2,
+          "answer": "O último byte recebido nesse intervalo é 1499, portanto o próximo esperado é 1500. O ACK cumulativo é expresso no espaço de sequência em bytes, não simplesmente na quantidade de pacotes.",
+          "source": "Autoral baseada em lista 01: questão 3e, com aprofundamento de TCP"
+        },
+        {
+          "id": "m7-q2",
+          "type": "open",
+          "prompt": "Compare voz ao vivo e transferência de um documento. Explique como prazo e tolerância a perdas influenciam a escolha do transporte, sem afirmar que todo áudio usa UDP.",
+          "answer": "Na transferência de um documento, bytes faltantes ou fora de ordem normalmente precisam ser recuperados para reconstruir o arquivo, favorecendo um serviço confiável e ordenado. Na voz ao vivo, dados muito atrasados podem perder valor, favorecendo mecanismos com controle de prazo e eventual tolerância a perdas. A escolha depende do projeto; aplicações podem usar diferentes protocolos e implementar mecanismos adicionais.",
+          "criteria": [
+            "Relacionar integridade ao documento.",
+            "Relacionar prazo de utilidade à voz ao vivo.",
+            "Não universalizar UDP para todo áudio ou vídeo.",
+            "Justificar garantias em vez de apenas dizer rápido/lento."
+          ],
+          "source": "Autoral baseada em lista 01: questão 1b e rc1_02.pdf: TCP/UDP"
+        },
+        {
+          "id": "m7-q3",
+          "type": "choice",
+          "prompt": "O receptor tem bastante memória, mas o caminho está congestionado. Qual mecanismo aborda diretamente esse segundo limite?",
+          "options": [
+            "Controle de congestionamento.",
+            "Somente controle de fluxo do receptor.",
+            "Resolução de nome DNS.",
+            "Mudança de half-duplex para simplex."
+          ],
+          "answerIndex": 0,
+          "answer": "Congestionamento se refere às condições da rede e do caminho; fluxo se refere à capacidade de recepção. Espaço livre no destino não prova que o caminho pode receber uma taxa arbitrária.",
+          "source": "Autoral baseada em plano: transporte; lista 01: janela de congestionamento, com aprofundamento autoral"
+        }
+      ]
+    },
+    {
+      "id": "rede-subredes-roteamento",
+      "title": "8. Rede, IPv4, sub-redes e rotas",
+      "subtitle": "Resolva a divisão /24 em quatro e entenda a decisão do próximo salto.",
+      "evidence": "tp02.pdf — Parte 1: dividir 192.168.1.0/24 em quatro sub-redes iguais e montar tabela de roteamento; Parte 2: simular tráfego no Packet Tracer. rc1_02.pdf — camada de rede e roteamento. O desenho da topologia do TP não foi recuperado em texto: exemplo de rota abaixo é autoral, não reconstrução da figura.",
+      "status": "Material lido",
+      "blocks": [
+        {
+          "title": "Prefixo e decisão local ou remota",
+          "html": "<p>Um endereço IPv4 possui 32 bits. O prefixo /n informa quantos pertencem à parte de rede; os demais variam dentro do bloco. Em /24, restam oito bits, portanto há 256 endereços. O endereço de rede representa o bloco, enquanto o broadcast representa todos os destinos daquele domínio IPv4. Nas sub-redes convencionais usadas neste exercício, eles não são atribuídos a hosts. Essas regras não devem ser extrapoladas sem ressalvas para casos especiais como enlaces /31.</p><p>Antes de enviar, um host verifica se o destino está na rede local, usando seu endereço e sua máscara. Se estiver em outra rede, normalmente encaminha ao gateway apropriado. O gateway precisa ser alcançável pelo enlace local. Dizer “o pacote vai direto ao servidor distante porque sei seu IP” ignora os saltos intermediários. Endereço final e próximo salto são informações diferentes.</p>"
+        },
+        {
+          "title": "Exemplo resolvido: quatro blocos iguais",
+          "html": "<p>Para dividir 192.168.1.0/24 em quatro blocos iguais, são necessários dois bits adicionais de rede, porque 2² = 4. O novo prefixo é /26, com máscara 255.255.255.192. Sobram seis bits de host: 64 endereços em cada bloco e, neste caso convencional, 62 endereços utilizáveis por equipamentos. Os inícios avançam de 64 em 64 no último octeto.</p><p>A rede A é 192.168.1.0/26, hosts .1 a .62, broadcast .63. A rede B é 192.168.1.64/26, hosts .65 a .126, broadcast .127. A rede C é 192.168.1.128/26, hosts .129 a .190, broadcast .191. A rede D é 192.168.1.192/26, hosts .193 a .254, broadcast .255. Um gateway ocupa um dos endereços utilizáveis se estiver nessa sub-rede; ele não cria um endereço extra. Os quatro blocos não se sobrepõem e juntos recompõem o /24.</p>"
+        },
+        {
+          "title": "Exemplo de rota sem inventar a topologia do TP",
+          "html": "<p>Em um exemplo autoral, considere um roteador com uma interface em A e outra em B, e um próximo roteador alcançável por 192.168.1.66 em B. Uma rota para C pode apontar ao próximo salto .66, desde que esse segundo roteador realmente tenha caminho até C. Para a comunicação completa funcionar, também é necessário caminho de retorno. Ter uma rota apenas de ida não basta para uma troca de requisição e resposta.</p><p>Uma tabela de encaminhamento relaciona prefixos de destino a ações, como interface de saída e próximo salto. Como complemento conceitual, havendo múltiplos prefixos compatíveis, a regra de prefixo mais longo escolhe o mais específico. Uma rota padrão /0 serve quando não existe outra entrada aplicável mais específica. O TP exige construir uma tabela para uma figura, mas a extração textual não revelou as conexões dessa figura. Por isso nenhuma tabela completa daquele desenho é apresentada como gabarito: os blocos foram resolvidos e a lógica das rotas foi ensinada com uma hipótese explicitada.</p>"
+        }
+      ],
+      "questions": [
+        {
+          "id": "m8-q1",
+          "type": "choice",
+          "prompt": "Qual prefixo resulta da divisão de um /24 em quatro sub-redes iguais?",
+          "options": [
+            "/25, com 126 hosts em cada uma.",
+            "/26, com 64 endereços e 62 hosts utilizáveis em cada uma.",
+            "/28, com 64 hosts utilizáveis.",
+            "/22, porque é preciso reduzir dois bits."
+          ],
+          "answerIndex": 1,
+          "answer": "Emprestam-se dois bits para gerar quatro combinações. /24 torna-se /26; restam seis bits e 2⁶ = 64 endereços. Descontando rede e broadcast neste caso, são 62 utilizáveis.",
+          "source": "Autoral baseada em tp02.pdf: Parte 1"
+        },
+        {
+          "id": "m8-q2",
+          "type": "open",
+          "prompt": "Para 192.168.1.128/26, informe máscara, broadcast, intervalo utilizável e explique se 192.168.1.191 pode ser um host nessa rede.",
+          "answer": "A máscara é 255.255.255.192. O bloco vai de 192.168.1.128 até 192.168.1.191. .128 é rede, .191 é broadcast e os hosts utilizáveis vão de .129 a .190. Portanto .191 não é endereço de host nessa sub-rede convencional.",
+          "criteria": [
+            "Apresentar máscara /26 corretamente.",
+            "Apontar .191 como broadcast.",
+            "Indicar .129 a .190 como intervalo utilizável.",
+            "Justificar a exclusão dos extremos."
+          ],
+          "source": "Autoral baseada em tp02.pdf: Parte 1"
+        },
+        {
+          "id": "m8-q3",
+          "type": "choice",
+          "prompt": "Um host de A precisa conversar com um host de C através de roteadores. Qual condição não pode ser esquecida?",
+          "options": [
+            "Basta existir uma rota de ida, porque respostas não usam rotas.",
+            "Todos os hosts precisam usar o endereço de broadcast.",
+            "Devem existir caminhos adequados de ida e retorno, além de gateways locais alcançáveis.",
+            "O DNS substitui a tabela de roteamento."
+          ],
+          "answerIndex": 2,
+          "answer": "Requisições e respostas precisam ser encaminhadas. Uma rota de ida isolada não garante comunicação bidirecional. DNS resolve nomes, não substitui rotas.",
+          "source": "Autoral baseada em tp02.pdf: tabelas e tráfego, com exemplo autoral"
+        }
+      ]
+    },
+    {
+      "id": "enlace-acesso-meio",
+      "title": "9. Enlace, quadros e compartilhamento",
+      "subtitle": "Separe a entrega em um salto da comunicação fim a fim.",
+      "evidence": "rc1_02.pdf — camada de enlace: quadros, erros, confirmações, piggybacking e acesso ao meio; rc1_01.pdf — redes de difusão, alocação estática/dinâmica e store-and-forward. Aprofundamentos de MAC, switch e detecção sem correção: complementos didáticos, sem slides específicos de enlace detalhado recuperados.",
+      "status": "Material lido",
+      "blocks": [
+        {
+          "title": "O enlace organiza a comunicação local",
+          "html": "<p>A camada de enlace lida com quadros no contexto de um enlace ou de uma rede local. Ela usa o meio físico e oferece um serviço à camada de rede. Seus mecanismos podem incluir delimitação de quadros, endereçamento local, detecção de erros e regras para compartilhar o meio. O material apresenta também confirmações e piggybacking, em que uma confirmação pode aproveitar uma transmissão de dados no sentido inverso. Isso descreve possibilidades de projeto, não obrigações universais de todos os protocolos de enlace.</p><p>Detecção de erro não é sinônimo de correção. Um verificador pode indicar que um quadro foi corrompido e o receptor pode descartá-lo, sem descobrir quais bits eram os corretos. Recuperação pode depender de retransmissão ou de mecanismos em outras camadas. Assim, o objetivo didático de oferecer um enlace confiável não permite concluir que qualquer tecnologia sempre entregue todos os quadros.</p>"
+        },
+        {
+          "title": "Exemplo resolvido: o custo de um salto",
+          "html": "<p>Considere um quadro de 1.500 bytes transmitido em um enlace de 10 Mbps, desprezando outras sobrecargas. São 12.000 bits, e o tempo de transmissão é 12.000 / 10.000.000 = 0,0012 segundo, ou 1,2 ms. Esse é o tempo de colocar o quadro no enlace. Não é o tempo total para atravessar uma rede com muitos roteadores, e não incorpora propagação, filas ou processamento.</p><p>Em store-and-forward, o equipamento recebe a unidade antes de encaminhá-la no modelo didático apresentado. Cada saída pode impor seu próprio tempo de transmissão e sua fila. Se a próxima saída é mais lenta e os quadros chegam mais depressa do que saem por algum período, a fila cresce. Não basta olhar a velocidade do primeiro cabo para inferir o desempenho da comunicação inteira. A taxa útil também depende do tamanho dos dados em relação aos cabeçalhos e aos demais custos.</p>"
+        },
+        {
+          "title": "Quem pode transmitir agora?",
+          "html": "<p>Em um meio compartilhado, várias estações podem querer transmitir. O acesso precisa de alguma regra. Na alocação estática descrita nos slides, cada estação tem um intervalo reservado; quando ela não tem dados, seu intervalo pode ficar ocioso. A alocação dinâmica tenta ajustar o uso à demanda, com decisões centralizadas ou descentralizadas. A comparação exige observar utilização e espera: reservar intervalos pode ser previsível, mas desperdiça capacidade quando a demanda é desigual.</p><p>Como complemento conceitual, um switch encaminha quadros dentro da rede local usando informações de enlace, enquanto um roteador encaminha pacotes entre redes usando a camada de rede. Isso não faz do switch um “roteador sem IP” em qualquer equipamento real, pois há equipamentos com funções combinadas. Também não se deve repetir que todo Ethernet moderno usa um único barramento compartilhado: o slide apresenta um exemplo de rede de difusão e sua motivação histórica. O conceito transferível é reconhecer quando há compartilhamento e qual mecanismo decide o acesso, em vez de atribuir uma única topologia a toda tecnologia.</p>"
+        }
+      ],
+      "questions": [
+        {
+          "id": "m9-q1",
+          "type": "choice",
+          "prompt": "Um quadro de 1.500 bytes entra em um enlace ideal de 10 Mbps. Qual é apenas seu atraso de transmissão?",
+          "options": [
+            "1,2 ms",
+            "12 ms",
+            "0,15 ms",
+            "1,2 s"
+          ],
+          "answerIndex": 0,
+          "answer": "1.500 × 8 = 12.000 bits. Dividindo por 10.000.000 bits/s, obtêm-se 0,0012 s = 1,2 ms. Esse valor não inclui propagação nem fila.",
+          "source": "Autoral baseada em rc1_01.pdf: store-and-forward e lista 01: cálculos de transmissão"
+        },
+        {
+          "id": "m9-q2",
+          "type": "open",
+          "prompt": "Explique por que detectar um erro em um quadro não é o mesmo que garantir a recuperação dos dados corretos.",
+          "answer": "A detecção identifica uma inconsistência, mas pode não revelar os bits originais. O quadro pode ser descartado. Para recuperar os dados, seria necessário outro mecanismo, como retransmissão ou um código capaz de correção, conforme o protocolo adotado. Nem todo enlace implementa a mesma recuperação.",
+          "criteria": [
+            "Distinguir identificar erro de reconstruir informação.",
+            "Citar descarte como possibilidade.",
+            "Indicar necessidade de mecanismo adicional sem universalizar ACK em todo enlace."
+          ],
+          "source": "Autoral baseada em rc1_02.pdf: erros e serviços de enlace, com complemento didático"
+        },
+        {
+          "id": "m9-q3",
+          "type": "choice",
+          "prompt": "Em uma alocação estática por intervalos, uma estação não tem dados no seu horário. Qual problema aparece no modelo dos slides?",
+          "options": [
+            "O intervalo pode ficar ocioso mesmo com outras estações querendo transmitir.",
+            "A estação passa automaticamente a ser um roteador.",
+            "O enlace deixa de ter taxa de transmissão.",
+            "O tempo de propagação é eliminado."
+          ],
+          "answerIndex": 0,
+          "answer": "A reserva fixa pode desperdiçar capacidade quando o dono do intervalo não tem dados. A alocação dinâmica procura responder à demanda, embora precise de mecanismos de coordenação.",
+          "source": "Autoral baseada em rc1_01.pdf: redes de difusão e alocação estática"
+        }
+      ]
+    },
+    {
+      "id": "redes-sem-fio",
+      "title": "10. Redes sem fio e revisão integrada",
+      "subtitle": "Relacione mobilidade, interferência, compartilhamento e camadas.",
+      "evidence": "Plano_Curso_DCC042-2026-3.pdf — unidade Redes sem Fio incluída na TVC2; rc1_01.pdf — redes sem fio: motivações, instalação, erros e interferência; rc0_01.pdf — computação móvel/ubíqua e redes ad hoc. Não foram recuperados slides específicos de mecanismos Wi-Fi: detalhamento abaixo é complemento conceitual, sem alegação de cobertura pelo professor.",
+      "status": "Complemento do plano",
+      "blocks": [
+        {
+          "title": "Sem fio não significa necessariamente móvel",
+          "html": "<p>Uma rede sem fio usa propagação eletromagnética em vez de exigir um cabo para cada comunicação de acesso. Isso facilita instalações e atende dispositivos móveis, mas as duas propriedades não são idênticas. Um computador fixo pode usar Wi-Fi; um dispositivo móvel pode permanecer parado durante uma sessão. O material introdutório relaciona comunicação sem fio, mobilidade e computação ubíqua, além de apontar maiores taxas de erro e interferência como desafios.</p><p>Em uma rede com infraestrutura, dispositivos usam um ponto de acesso para alcançar a rede local correspondente. Em uma rede ad hoc, participantes podem comunicar sem depender daquele modelo de ponto de acesso central. Esses são modelos de organização, não garantias de Internet disponível. O ponto de acesso pode estar funcionando enquanto a ligação com outras redes está indisponível. Por isso “conectado ao Wi-Fi” não prova que DNS, gateway e acesso à Internet estejam todos funcionando.</p>"
+        },
+        {
+          "title": "Exemplo resolvido: sinal forte, experiência ruim",
+          "html": "<p>Uma estudante vê sinal forte, mas uma chamada de voz tem interrupções. Sinal forte sugere uma condição do enlace de rádio, não ausência de concorrência ou congestionamento. Outros usuários podem disputar o meio, interferências podem afetar quadros e um enlace posterior pode ser o gargalo. Uma investigação deve separar alcance de rádio, qualidade do enlace, ocupação do meio, acesso ao gateway e caminho até o serviço. Evite atribuir qualquer lentidão automaticamente ao DNS.</p><p>Como complemento aos slides gerais, mecanismos de acesso Wi-Fi procuram reduzir colisões por espera e contenção. O problema de terminal oculto ilustra o limite de apenas escutar: dois transmissores podem não se ouvir, mas suas transmissões alcançar o mesmo receptor e interferir. Estratégias como RTS/CTS podem ajudar em certos cenários, ao custo de mensagens adicionais. Esses detalhes são apresentados como base conceitual para revisão, não como reprodução de slides específicos nem indicação de que serão cobrados.</p>"
+        },
+        {
+          "title": "Monte uma explicação de ponta a ponta",
+          "html": "<p>Considere acessar um serviço por nome em um notebook sem fio. A resolução DNS pode obter o endereço; a aplicação usa um serviço de transporte; IP determina o destino e o encaminhamento; o enlace sem fio precisa transportar quadros até a infraestrutura local. Perdas no rádio podem gerar novas tentativas no enlace quando o mecanismo existe, enquanto mecanismos fim a fim podem agir no transporte. Uma ação local não substitui automaticamente o controle de toda a comunicação.</p><p>A revisão deve treinar relações: como um timeout pode resultar de várias causas, por que uma porta não substitui um IP, como o /26 delimita a rede local e por que baixa latência não equivale apenas a alta taxa nominal. Não memorize números antigos de capacidade citados nos slides introdutórios como se fossem limites atuais de Wi-Fi. Também não acrescente segurança como unidade confirmada desta prova: o cronograma marca unidades 1 a 6, enquanto Segurança aparece como unidade posterior no plano. O escopo está documentado, mas a distribuição exata das questões e o aprofundamento de mecanismos sem fio permanecem desconhecidos.</p>"
+        }
+      ],
+      "questions": [
+        {
+          "id": "m10-q1",
+          "type": "choice",
+          "prompt": "O notebook mostra conexão ao Wi-Fi, mas não acessa um serviço externo. Qual conclusão é válida?",
+          "options": [
+            "Wi-Fi conectado garante Internet e DNS funcionando.",
+            "O problema só pode ser falta de potência do rádio.",
+            "A associação local não garante que gateway, DNS e caminho externo estejam funcionando.",
+            "O transporte é desnecessário porque existe um ponto de acesso."
+          ],
+          "answerIndex": 2,
+          "answer": "Conectividade local e acesso fim a fim são condições diferentes. É preciso investigar as etapas sem deduzir a causa apenas do indicador de Wi-Fi.",
+          "source": "Autoral baseada em plano: Redes sem Fio e rc1_01.pdf: motivações e limitações, com exemplo complementar"
+        },
+        {
+          "id": "m10-q2",
+          "type": "open",
+          "prompt": "Dois transmissores não se ouvem, mas ambos alcançam o mesmo receptor. Explique o risco e por que apenas escutar antes de transmitir pode não bastar.",
+          "answer": "É o cenário de terminais ocultos: cada transmissor pode perceber o meio como livre na sua posição, embora os sinais interfiram no receptor compartilhado. Ouvir localmente não informa perfeitamente a condição no receptor. Coordenação adicional pode reduzir esse risco, mas possui custos e não oferece uma solução universal sem condições.",
+          "criteria": [
+            "Identificar a visão local diferente da condição no receptor.",
+            "Relacionar transmissões simultâneas à interferência.",
+            "Reconhecer limite da escuta e custo de coordenação adicional."
+          ],
+          "source": "Autoral baseada em rc1_01.pdf: interferência, com complemento conceitual de terminal oculto"
+        },
+        {
+          "id": "m10-q3",
+          "type": "choice",
+          "prompt": "Qual sequência organiza melhor o raciocínio de um acesso a serviço por nome?",
+          "options": [
+            "A porta determina a distância do rádio e elimina a necessidade de IP.",
+            "DNS pode fornecer o endereço; transporte atende a comunicação entre processos; IP encaminha entre redes; enlace cuida do salto local.",
+            "O ponto de acesso garante que a pessoa respondeu à aplicação.",
+            "O endereço MAC substitui todos os protocolos de aplicação."
+          ],
+          "answerIndex": 1,
+          "answer": "As camadas cooperam com responsabilidades diferentes. DNS não é transporte, porta não é nome, e conectividade no enlace não garante resultado humano nem entrega completa da aplicação.",
+          "source": "Autoral baseada em rc1_02.pdf: camadas, rc2_02.ppt: DNS e plano: sem fio"
+        }
+      ]
+    }
+  ],
+  "examQuestions": [
+    {
+      "id": "sim-1",
+      "type": "open",
+      "prompt": "Um arquivo descrito como “300G” deve atravessar um enlace de 100 Mbps. Explicite uma interpretação para o tamanho, calcule o tempo ideal e discuta duas razões pelas quais o tempo real pode ser maior.",
+      "answer": "Assumindo 300 GB decimais, o tamanho é 2,4 × 10¹² bits. A taxa é 10⁸ bits/s e o tempo ideal é 24.000 s, ou 6 h 40 min. Se fossem 300 Gb, seriam 3.000 s. Cabeçalhos, retransmissões, contenção, filas e gargalos podem reduzir a vazão útil ou acrescentar atraso. A unidade deve ser declarada porque “300G” não a especifica.",
+      "criteria": [
+        "Declarar GB decimal ou outra hipótese coerente.",
+        "Converter tamanho e taxa para unidades compatíveis.",
+        "Apresentar cálculo e unidade corretos para a hipótese.",
+        "Distinguir tempo ideal e condições reais."
+      ],
+      "source": "Autoral baseada em lista 01: medidas de transmissão e estilo da TVC1 descrita; questão autoral, não previsão"
+    },
+    {
+      "id": "sim-2",
+      "type": "open",
+      "prompt": "Projete a reação de A e B a esta sequência: B recebeu um comando, o ACK se perdeu e A expirou a espera. Explique como evitar bloqueio e execução duplicada, e o que um ACK atrasado pode causar.",
+      "answer": "A limita a espera com um temporizador e pode retransmitir segundo uma política finita. As mensagens e confirmações precisam ser associadas por identificadores. B reconhece a duplicata, não executa novamente a operação e pode repetir o ACK. Um ACK atrasado não deve confirmar outro comando. Identificadores finitos exigem cuidados de reutilização e validade; silêncio não prova que o primeiro comando falhou.",
+      "criteria": [
+        "Incluir temporizador e condição de reação.",
+        "Tratar perda do ACK separadamente da perda do comando.",
+        "Evitar reexecução com identificação de duplicatas.",
+        "Associar ACK ao dado correto e mencionar atraso/reutilização."
+      ],
+      "source": "Autoral baseada em rc0_02.pdf: projeto de protocolos confirmados"
+    },
+    {
+      "id": "sim-3",
+      "type": "open",
+      "prompt": "Um servidor TCP de ECHO atende dois clientes na porta 4444. Explique como as conexões são identificadas, o papel de accept e o que muda ao passar de atendimento sequencial para concorrente.",
+      "answer": "Cada conexão é identificada pelos endpoints de origem e destino no contexto TCP. O socket de escuta permanece associado à porta 4444 e accept fornece um socket conectado para cada conexão aceita; isso não exige mudar a porta do serviço. No servidor sequencial, uma conexão pode ocupar o atendimento enquanto outras aguardam. Com concorrência, diferentes conexões podem ser tratadas sem esperar o término da anterior, por exemplo com threads. O protocolo de comandos e os limites das mensagens ainda precisam ser definidos.",
+      "criteria": [
+        "Apontar par de endpoints ou quádrupla TCP.",
+        "Distinguir socket conectado de socket de escuta.",
+        "Não exigir nova porta de servidor por cliente.",
+        "Explicar efeito da concorrência e necessidade do protocolo."
+      ],
+      "source": "Autoral baseada em lab_rc_02.pdf: ECHO e tarefa multithreaded; rc2_01.ppt: serviços"
+    },
+    {
+      "id": "sim-4",
+      "type": "open",
+      "prompt": "Divida 192.168.1.0/24 em quatro sub-redes iguais. Apresente rede, máscara, broadcast e hosts utilizáveis de cada uma. Explique por que uma comunicação entre duas delas pode falhar mesmo com endereços válidos.",
+      "answer": "As redes são 192.168.1.0/26, .64/26, .128/26 e .192/26, todas com máscara 255.255.255.192. Os broadcasts são .63, .127, .191 e .255; os intervalos de hosts são .1–.62, .65–.126, .129–.190 e .193–.254. Cada bloco tem 64 endereços, 62 utilizáveis no exercício. Endereços válidos não bastam: gateways e rotas de ida e retorno precisam estar corretos; enlaces e políticas também podem impedir a troca. A topologia exata do TP não foi reconstruída, portanto não existe uma tabela específica presumida nesta resposta.",
+      "criteria": [
+        "Derivar /26 usando dois bits adicionais.",
+        "Informar os quatro limites sem sobreposição.",
+        "Excluir rede e broadcast dos hosts.",
+        "Relacionar comunicação a gateway e rotas nos dois sentidos."
+      ],
+      "source": "Autoral baseada em tp02.pdf: Partes 1 e 2, com cenário discursivo autoral"
+    },
+    {
+      "id": "sim-5",
+      "type": "open",
+      "prompt": "Compare uma transferência de documento, uma chamada ao vivo e uma consulta DNS. Discuta garantias úteis de transporte, o custo de esperar recuperação e por que não é correto dizer que DNS só usa UDP ou HTTP sempre usa TCP.",
+      "answer": "Um documento exige reconstrução integral e ordenada; TCP é uma escolha clássica adequada. Uma chamada ao vivo valoriza prazo e pode preferir perder uma amostra a reproduzi-la tarde; o projeto determina mecanismos e transporte. Consultas DNS simples tipicamente usam UDP, mas TCP também é parte do funcionamento de DNS em situações apropriadas. HTTP clássico usa TCP, mas HTTP/3 usa QUIC sobre UDP. Escolher UDP não impede mecanismos adicionais de confiabilidade; escolher TCP não garante prazo nem leitura humana.",
+      "criteria": [
+        "Justificar integridade versus prazo conforme a aplicação.",
+        "Relacionar TCP a fluxo ordenado sem garantir latência.",
+        "Reconhecer UDP e TCP em DNS.",
+        "Evitar universalizar HTTP/TCP ou voz/UDP."
+      ],
+      "source": "Autoral baseada em lista 01: questão 1b, rc2_02.ppt: DNS e complementos conceituais explicitados"
+    },
+    {
+      "id": "sim-6",
+      "type": "open",
+      "prompt": "Um notebook no Wi-Fi de uma rede /26 consegue alcançar o gateway, mas uma aplicação remota apresenta atrasos e timeouts. Construa uma análise por camadas, sem atribuir uma causa definitiva a partir desses dados.",
+      "answer": "Alcançar o gateway confirma alguma conectividade local naquele teste, não todo o caminho. No enlace sem fio, podem existir contenção, interferência e variação na entrega. Na rede, é preciso verificar rotas e caminho de retorno; na aplicação, resolução DNS e disponibilidade do serviço; no transporte, perdas, espera por dados anteriores e reações de temporizadores. Timeout apenas indica ausência do evento no prazo. Testes devem isolar etapas e comparar resultados. Não há evidência suficiente para afirmar uma causa única.",
+      "criteria": [
+        "Distinguir enlace local de caminho fim a fim.",
+        "Propor hipóteses em mais de uma camada.",
+        "Não tratar timeout como diagnóstico único.",
+        "Mencionar verificação de nome/serviço e rotas conforme a etapa."
+      ],
+      "source": "Autoral baseada em plano: unidades 3–6; rc0_02.pdf: timeout; rc1_01.pdf: sem fio; cenário integrado autoral"
+    }
+  ],
+  "examAnalysis": "<p><strong>Escopo documentado:</strong> o Plano_Curso_DCC042-2026-3.pdf marca TVC2 em <strong>5 de novembro de 2026</strong>, com unidades 1 a 6: Introdução, Aplicações, Transporte, Rede, Enlace e Redes sem Fio. O cabeçalho ainda diz 2024.1, mas o cronograma usa 2026 e a assinatura é de 18 de agosto de 2026. Essa inconsistência é registrada, não corrigida silenciosamente. O plano não informa a distribuição das questões por unidade.</p>\n<p><strong>O estilo da TVC1:</strong> a foto enviada foi lida. Ela traz seis questões abertas: cálculo de transferência; comparação entre simplex, half-duplex e full-duplex; interpretação de um cenário de e-mail sem resposta; função dos sockets e identificação dos processos; justificativa de TCP versus UDP; e função e transporte do DNS. O padrão é explicar, comparar e justificar — não apenas marcar alternativas. Os quizzes das aulas ajudam a aprender; as discursivas treinam a escrita exigida nesse formato. A lista 01 é outro documento e não foi confundida com a prova.</p>\n<p><strong>Unidades ambíguas:</strong> “300G” não especifica bytes ou bits. As respostas autorais usam 300 GB decimais quando anunciado: 24.000 s a 100 Mbps. Com 300 Gb, seriam 3.000 s. Não trocar silenciosamente GB por GiB. A lista também traz uma questão que chama K de “computeiro”; em qualquer resolução dessa questão específica, é necessário explicitar a convenção e não misturá-la à hipótese decimal dos outros exemplos.</p>\n<p><strong>E-mail sem resposta:</strong> timeout trata uma espera técnica por evento de protocolo; SMTP não garante resposta humana. A imagem mostra o enunciado, mas não traz o critério de correção do professor; por isso não é possível declarar um único gabarito oficial para esse cenário. A correção proposta valoriza explicitar a interpretação.</p>\n<p><strong>TCP, UDP e DNS:</strong> justificar por integridade, ordem e prazo, não por “TCP seguro / UDP rápido”. DNS costuma usar UDP em consultas simples, mas também usa TCP. A associação clássica entre HTTP e TCP não é universal: HTTP/3 usa QUIC sobre UDP. Essas ressalvas são complementos conceituais e não supostas frases dos slides.</p>\n<p><strong>Como usar as respostas:</strong> todas as questões desta página são autorais. Resolva antes de abrir a resposta. Nas abertas, compare sua justificativa aos critérios e faça autoavaliação; não há correção automática por palavras-chave nem nota inferida de texto livre. Estes materiais não registram tentativas ou domínio já demonstrado pela estudante.</p>\n<p><strong>Limitações de leitura:</strong> rc2_03.ppt falhou na extração automática. Foram recuperados e lidos 77 registros textuais candidatos do formato binário, suficientes para identificar seções P2P, mas sem validar ordem de slides, figuras e completude. O desenho da topologia de tp02.pdf não apareceu no texto; somente a divisão de sub-redes e exemplos de rotas com hipóteses declaradas foram resolvidos. Não foram encontrados nesta seleção slides específicos de transporte, rede, enlace e sem fio com o mesmo detalhamento dos de introdução/aplicações; aprofundamentos foram sinalizados.</p>",
+  "sources": [
+    {
+      "title": "Plano_Curso_DCC042-2026-3.pdf",
+      "note": "Lido: objetivos, unidades e cronograma. TVC2 em 05/11/2026, unidades 1–6; cabeçalho 2024.1 diverge da assinatura e do cronograma de 2026."
+    },
+    {
+      "title": "rc0_01.pdf — Problema da Comunicação",
+      "note": "Lido uma vez, sem duplicar outra cópia: regras das tochas, protocolos, camadas e computação móvel/ubíqua. Datas e previsões históricas não foram apresentadas como estado atual."
+    },
+    {
+      "title": "rc0_02.pdf — Classificação e Projeto de Protocolos",
+      "note": "Lido: conexão, confirmação, ACK/NAK, temporizadores, retransmissões, identificadores finitos e validade temporal."
+    },
+    {
+      "title": "rc1_01.pdf — Introdução",
+      "note": "Lido: desempenho, redes de difusão e ponto a ponto, acesso estático/dinâmico, escalas, store-and-forward e limitações gerais das redes sem fio."
+    },
+    {
+      "title": "rc1_02.pdf — Camadas e modelos",
+      "note": "Lido: serviços, interfaces, entidades-pares, SAP, OSI, TCP/IP, transporte, rede e enlace. Afirmações didáticas gerais não foram elevadas a garantias de toda tecnologia."
+    },
+    {
+      "title": "rc2_01.ppt — Camada de Aplicação / Cliente-Servidor",
+      "note": "Extração automática lida: papéis, identificação por portas, programas versus computadores servidores. Uma indicação inconsistente de porta POP3 foi deliberadamente omitida; características exemplificativas de servidores não foram universalizadas."
+    },
+    {
+      "title": "rc2_02.ppt — DNS e SNMP",
+      "note": "Extração automática lida: espaço de nomes, resolver, UDP no exemplo DNS, gerenciamento, áreas ISO, gerente, agente, MIB e trap. TCP em DNS foi identificado como complemento, não como conteúdo confirmado dessa seção."
+    },
+    {
+      "title": "rc2_03.ppt — Aplicações P2P",
+      "note": "Leitura parcial recuperada: extração automática falhou. Lidos 77 registros textuais candidatos, incluindo Napster, Gnutella, swarm, tracker e rarest-first. Figuras, ordenação e completude não validadas; estatísticas antigas não usadas como atuais."
+    },
+    {
+      "title": "lista 01 - 2026-3.pdf",
+      "note": "Lida: comparação de transmissão, transporte clássico para HTTP/FTP/SMTP, voz em pacotes, arquiteturas e crítica de implementação TCP. Não confundida com a foto da TVC1."
+    },
+    {
+      "title": "tp02.pdf",
+      "note": "Lido o texto: dividir 192.168.1.0/24 em quatro sub-redes iguais, montar rotas e testar no Packet Tracer. Figura da topologia não recuperada em texto; não foi inventada tabela oficial."
+    },
+    {
+      "title": "lab_rc_02.pdf — Sockets e ECHO",
+      "note": "Lido: endpoints, socket de escuta e aceitação, cliente/servidor Java e tarefa echo/quit multithreaded. Nova conexão aceita não foi indevidamente ensinada como exigindo nova porta local."
+    },
+    {
+      "title": "Foto da TVC1 enviada pela estudante",
+      "note": "Foto lida: seis questões abertas, com cálculo, comparação, interpretação de cenário e justificativa. Usada como referência de estilo; não há gabarito oficial na imagem."
+    }
+  ]
+}
