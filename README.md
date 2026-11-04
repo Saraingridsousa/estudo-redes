@@ -19,7 +19,7 @@ As referências e limitações estão dentro da página em “Base & fontes”. 
 
 ## Como baixar do GitHub
 
-No repositório, clique em **Code → Download ZIP**, extraia os arquivos e abra `Redes-TVC2.html` no navegador. O repositório é privado: armazenar o arquivo aqui não publica um site nem ativa o GitHub Pages.
+No repositório, clique em **Code → Download ZIP**, extraia os arquivos e abra `Redes-TVC2.html` no navegador. A versão online é publicada pelo GitHub Pages a partir de `index.html`, na raiz da branch `main`. O repositório e a página são públicos, conforme autorizado pela proprietária.
 
 ## Privacidade
 
